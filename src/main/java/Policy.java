@@ -1,5 +1,4 @@
-import exceptions.PremiumException;
-import exceptions.RiskException;
+import exceptions.RiskNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +67,7 @@ public class Policy implements IPolicy {
     public double getPremium() throws Exception {
         double premium = 0;
         if (risks.isEmpty()) {
-            throw new PremiumException();
+            throw new RiskNotFoundException();
         } else {
             for (Risk price : risks) {
                 premium = premium + ((price.getYearlyPrice() / 12) * validMonths);
@@ -80,7 +79,7 @@ public class Policy implements IPolicy {
     @Override
     public List<Risk> getInsuredRisks() throws Exception {
         if (risks.isEmpty()) {
-            throw new RiskException();
+            throw new RiskNotFoundException();
         } else {
             return risks;
         }

@@ -4,7 +4,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -36,21 +35,15 @@ public class PolicyTest {
     }
 
     @Test
-    public void getPremiumTest() {
-        try {
+    public void getPremiumTest() throws Exception{
             Assert.assertEquals(1000, policy.getPremium(), 100);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
     @Test
-    public void getInsuredRisksTest() {
-        try {
-            Assert.assertArrayEquals("Expected same result", risks.toArray(), policy.getInsuredRisks().toArray());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void getInsuredRisksTest() throws Exception{
+        Assert.assertArrayEquals("Expected same result", risks.toArray(), policy.getInsuredRisks().toArray());
+
     }
 
 

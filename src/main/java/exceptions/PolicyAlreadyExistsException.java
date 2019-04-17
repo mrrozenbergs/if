@@ -1,6 +1,6 @@
 package exceptions;
 
-public class PolicyAlreadyExistsException extends Exception {
+public class PolicyAlreadyExistsException extends RuntimeException {
 
     private static final String DEFAULT_MESSAGE = "Policy already exists!";
 

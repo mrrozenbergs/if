@@ -1,7 +1,4 @@
-import exceptions.IncorrectInputException;
-import exceptions.NameException;
-import exceptions.PolicyAlreadyExistsException;
-import exceptions.RiskException;
+import exceptions.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,7 +14,7 @@ public class InsuranceCompany implements IInsuranceCompany {
     @Override
     public String getName() throws Exception {
         if (name == null) {
-            throw new NameException();
+            throw new NameNotFoundException();
         } else {
             return name;
         }
@@ -26,7 +23,7 @@ public class InsuranceCompany implements IInsuranceCompany {
     @Override
     public List<Risk> getAvailableRisks() throws Exception {
         if (risksAvailable.isEmpty()) {
-            throw new RiskException();
+            throw new RiskNotFoundException();
         } else {
             return risksAvailable;
         }
@@ -35,7 +32,7 @@ public class InsuranceCompany implements IInsuranceCompany {
     @Override
     public void setAvailableRisks(List<Risk> value) throws Exception {
         if (value.isEmpty()) {
-            throw new RiskException();
+            throw new RiskNotFoundException();
         } else {
             risksAvailable.addAll(value);
         }
@@ -65,7 +62,7 @@ public class InsuranceCompany implements IInsuranceCompany {
     @Override
     public void addRisk(String nameOfInsuredObject, Risk risk, LocalDateTime validFrom) throws Exception {
         if (getPolicy(nameOfInsuredObject, validFrom) == null) {
-            throw new Exception();
+            throw new PolicyNotFoundException();
         } else {
             Policy policy = (Policy) getPolicy(nameOfInsuredObject, validFrom);
             List<Risk> insuredRisks = policy.getInsuredRisks();
@@ -77,8 +74,9 @@ public class InsuranceCompany implements IInsuranceCompany {
     @Override
     public IPolicy getPolicy(String nameOfInsuredObject, LocalDateTime effectiveDate) throws Exception {
         return policies.stream()
-                .filter(a -> nameOfInsuredObject.equals(a.getNameOfInsuredObject()))
+                .filter(a -> nameOfInsuredObject.equals(a.getNameOfInsuredObject()) && effectiveDate.isBefore(a.getValidTill())
+                        && effectiveDate.isAfter(a.getValidFrom()) || effectiveDate.isEqual(a.getValidFrom()))
                 .findAny()
-                .get();
+                .orElseThrow(PolicyNotFoundException::new);
     }
 }

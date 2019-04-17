@@ -29,9 +29,9 @@ public class InsuranceCompanyTest {
         risksAvailable.add(new Risk("flood", 300));
         risksAvailable.add(new Risk("fire", 400));
 
-        policies.add(new Policy("Car",LocalDateTime.of(2019,1,1,1,1,1,1), (short) 12, risksAvailable));
-        policies.add(new Policy("Apartment",LocalDateTime.of(2019,6,1,1,1,1,1), (short) 18, risksAvailable));
-        policies.add(new Policy("Office",LocalDateTime.of(2019,10,1,1,1,1,1), (short) 6, risksAvailable));
+        policies.add(new Policy("Car", LocalDateTime.of(2019, 1, 1, 1, 1, 1, 1), (short) 12, risksAvailable));
+        policies.add(new Policy("Apartment", LocalDateTime.of(2019, 6, 1, 1, 1, 1, 1), (short) 18, risksAvailable));
+        policies.add(new Policy("Office", LocalDateTime.of(2019, 10, 1, 1, 1, 1, 1), (short) 6, risksAvailable));
     }
 
     @Test
@@ -40,115 +40,66 @@ public class InsuranceCompanyTest {
     }
 
     @Test
-    public void getAvailableRisksTest(){
-        try {
-            insuranceCompany.setAvailableRisks(risksAvailable);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            Assert.assertArrayEquals("Risks", risksAvailable.toArray(), insuranceCompany.getAvailableRisks().toArray());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void getAvailableRisksTest() throws Exception {
+        insuranceCompany.setAvailableRisks(risksAvailable);
+        Assert.assertArrayEquals("Risks", risksAvailable.toArray(), insuranceCompany.getAvailableRisks().toArray());
+
     }
 
     @Test
-    public void setAvailableRisksTest(){
+    public void setAvailableRisksTest() throws Exception {
         List<Risk> list = new ArrayList<>();
         Risk risk = new Risk();
         risk.setName("accident");
         risk.setYearlyPrice(50);
         list.add(risk);
-        try {
-            insuranceCompany.setAvailableRisks(list);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            Assert.assertArrayEquals("arrays are equal", list.toArray(), insuranceCompany.getAvailableRisks().toArray());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        insuranceCompany.setAvailableRisks(list);
+        Assert.assertArrayEquals("arrays are equal", list.toArray(), insuranceCompany.getAvailableRisks().toArray());
 
     }
 
     @Test
-    public void sellPolicyTest(){
-        try {
-            insuranceCompany.sellPolicy("Car2", LocalDateTime.of(2019,10,1,1,1,1,1),(short) 12, risksAvailable);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void sellPolicyTest() throws Exception {
 
-        try {
-            Assert.assertEquals("Car2", insuranceCompany.getPolicy("Car2", LocalDateTime.of(2019,10,1,1,1,1,1) ).getNameOfInsuredObject());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        insuranceCompany.sellPolicy("Car2", LocalDateTime.of(2019, 10, 1, 1, 1, 1, 1), (short) 12, risksAvailable);
+        Assert.assertEquals("Car2", insuranceCompany.getPolicy("Car2", LocalDateTime.of(2019, 10, 1, 1, 1, 1, 1)).getNameOfInsuredObject());
 
     }
 
     @Test
-    public void ifCreatingSamePoliciesTest(){
+    public void ifCreatingSamePoliciesTest() throws Exception {
         exception.expect(PolicyAlreadyExistsException.class);
         exception.expectMessage("Policy already exists!");
-        try {
-            insuranceCompany.sellPolicy("Car2", LocalDateTime.of(2019,10,1,1,1,1,1),(short) 12, risksAvailable);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        try {
-            insuranceCompany.sellPolicy("Car2", LocalDateTime.of(2019,10,1,1,1,1,1),(short) 12, risksAvailable);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        insuranceCompany.sellPolicy("Car2", LocalDateTime.of(2019, 10, 1, 1, 1, 1, 1), (short) 12, risksAvailable);
 
+        insuranceCompany.sellPolicy("Car2", LocalDateTime.of(2019, 10, 1, 1, 1, 1, 1), (short) 12, risksAvailable);
     }
 
     @Test
-    public void addRiskTest(){
+    public void addRiskTest() throws Exception {
         Risk risk = new Risk();
         risk.setName("accident");
         risk.setYearlyPrice(50);
 
-        try {
-            insuranceCompany.sellPolicy("Car2", LocalDateTime.of(2019,10,1,1,1,1,1),(short) 12, risksAvailable);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        insuranceCompany.sellPolicy("Car2", LocalDateTime.of(2019, 10, 1, 1, 1, 1, 1), (short) 12, risksAvailable);
 
+        insuranceCompany.addRisk("Car2", risk, LocalDateTime.of(2019, 10, 1, 1, 1, 1, 1));
 
-
-        try {
-            insuranceCompany.addRisk("Car2", risk, LocalDateTime.of(2019,10,1,1,1,1,1));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            Assert.assertEquals(risk, insuranceCompany.getPolicy("Car2", LocalDateTime.of(2019,1,1,1,1,1,1))
-                    .getInsuredRisks().stream().filter(a -> "accident".equals(a.getName())).findAny().get());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Assert.assertEquals(risk, insuranceCompany.getPolicy("Car2", LocalDateTime.of(2019, 10, 1, 1, 1, 1, 1))
+                .getInsuredRisks()
+                .stream()
+                .filter(a -> risk.getName().equals(a.getName()))
+                .findAny()
+                .orElse(null));
     }
 
     @Test
-    public void getPolicyTest(){
-        try {
-            insuranceCompany.sellPolicy("Car2", LocalDateTime.of(2019,10,1,1,1,1,1),(short) 12, risksAvailable);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            Assert.assertEquals("Car2", insuranceCompany.getPolicy("Car2", LocalDateTime.of(2019,10,1,1,1,1,1) ).getNameOfInsuredObject());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void getPolicyTest() throws Exception {
+
+        insuranceCompany.sellPolicy("Car2", LocalDateTime.of(2019, 10, 1, 1, 1, 1, 1), (short) 12, risksAvailable);
+
+        Assert.assertEquals("Car2", insuranceCompany.getPolicy("Car2", LocalDateTime.of(2019, 10, 1, 1, 1, 1, 1)).getNameOfInsuredObject());
 
     }
 
