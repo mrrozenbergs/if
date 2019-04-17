@@ -1,4 +1,6 @@
+import exceptions.IncorrectInputException;
 import exceptions.PolicyAlreadyExistsException;
+import exceptions.PolicyNotFoundException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -14,7 +16,6 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class InsuranceCompanyTest {
 
-    String name = "IF";
     List<Risk> risksAvailable = new ArrayList<>();
     List<Policy> policies = new ArrayList<>();
     InsuranceCompany insuranceCompany = new InsuranceCompany();
@@ -35,8 +36,8 @@ public class InsuranceCompanyTest {
     }
 
     @Test
-    public void getNameTest() {
-        Assert.assertEquals("IF", this.name);
+    public void getNameTest() throws Exception {
+        Assert.assertEquals("IF", insuranceCompany.getName());
     }
 
     @Test
@@ -77,6 +78,14 @@ public class InsuranceCompanyTest {
     }
 
     @Test
+    public void ifDateOfPolicyIsInPastTest() throws Exception {
+        exception.expect(IncorrectInputException.class);
+        exception.expectMessage("Please provide correct inputs!");
+
+        insuranceCompany.sellPolicy("Car3", LocalDateTime.of(2019, 1, 1, 1, 1, 1, 1), (short) 12, risksAvailable);
+    }
+
+    @Test
     public void addRiskTest() throws Exception {
         Risk risk = new Risk();
         risk.setName("accident");
@@ -100,6 +109,13 @@ public class InsuranceCompanyTest {
         insuranceCompany.sellPolicy("Car2", LocalDateTime.of(2019, 10, 1, 1, 1, 1, 1), (short) 12, risksAvailable);
 
         Assert.assertEquals("Car2", insuranceCompany.getPolicy("Car2", LocalDateTime.of(2019, 10, 1, 1, 1, 1, 1)).getNameOfInsuredObject());
+    }
+
+    @Test
+    public void ifPolicyDoentExist() throws Exception {
+        exception.expect(PolicyNotFoundException.class);
+        exception.expectMessage("Policy not found..");
+        insuranceCompany.getPolicy("Car2", LocalDateTime.of(2019, 10, 1, 1, 1, 1, 1));
 
     }
 

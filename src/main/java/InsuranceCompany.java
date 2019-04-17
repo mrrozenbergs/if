@@ -6,7 +6,7 @@ import java.util.List;
 
 public class InsuranceCompany implements IInsuranceCompany {
 
-    private String name;
+    private String name = "IF";
     private List<Risk> risksAvailable = new ArrayList<>();
     private List<Policy> policies = new ArrayList<>();
 
